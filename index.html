@@ -5,6 +5,22 @@
   <title>Chladni interactif – Playlist locale</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Style minimal pour le bouton personnalisé */
+    #customPlayButton {
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+    #customPlayButton:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
 
@@ -33,6 +49,7 @@
 
     <div class="control">
       <audio id="audioFile" controls preload="auto"></audio>
+      <button id="customPlayButton">Lecture</button>
     </div>
   </section>
 
