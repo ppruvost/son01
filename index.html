@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Figures de Chladni</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- BLOC : TITRE -->
+  <header>
+    <h1>Figures de Chladni – vibration et forme</h1>
+  </header>
+
+  <!-- BLOC : VISUALISATION -->
+  <main>
+    <canvas id="canvas" width="460" height="460"></canvas>
+  </main>
+
+  <!-- BLOC : CONTROLES -->
+  <section class="controls">
+
+    <div class="control">
+      <label>Fréquence (Hz)</label>
+      <select id="freqSelect">
+        <option value="174">174 – Ancrage</option>
+        <option value="285">285 – Régénération</option>
+        <option value="396">396 – Libération</option>
+        <option value="432">432 – Harmonie</option>
+        <option value="528">528 – Transformation</option>
+        <option value="639">639 – Cœur</option>
+        <option value="741">741 – Clarté</option>
+        <option value="852">852 – Intuition</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label>Mode m</label>
+      <input type="range" id="mSlider" min="1" max="10" value="3">
+      <span id="mVal">3</span>
+    </div>
+
+    <div class="control">
+      <label>Mode n</label>
+      <input type="range" id="nSlider" min="1" max="10" value="4">
+      <span id="nVal">4</span>
+    </div>
+
+    <button id="playBtn">▶ Son</button>
+  </section>
+
+  <!-- BLOC : PIED -->
+  <footer>
+    Visualisation cymatique
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
