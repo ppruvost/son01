@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   /********************
-   * VARIABLES
+   * VARIABLES DOM
    ********************/
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
@@ -9,10 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const audioSelect = document.getElementById("audioSelect");
   const audioElement = document.getElementById("audioFile");
 
+  const loopTrackCheckbox = document.getElementById("loopTrack");
+  const loopPlaylistCheckbox = document.getElementById("loopPlaylist");
+
   let audioCtx, analyser, dataArray;
+  let currentTrackIndex = 0;
 
   /********************
-   * PLAYLIST
+   * PLAYLIST LOCALE
    ********************/
   const audioFiles = [
     "song/396 HZ.mp3",
@@ -28,10 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
     audioSelect.appendChild(option);
   });
 
-  audioElement.src = audioFiles[0];
+  if (audioFiles.length > 0) {
+    audioElement.src = audioFiles[0];
+  }
 
   audioSelect.addEventListener("change", () => {
-    audioElement.src = audioSelect.value;
+    currentTrackIndex = audioSelect.selectedIndex;
+    audioElement.src = audioFiles[currentTrackIndex];
     audioElement.play();
   });
 
@@ -43,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const source = audioCtx.createMediaElementSource(audioElement);
 
     analyser = audioCtx.createAnalyser();
-    analyser.fftSize = 512; // ✅ valeur valide
+    analyser.fftSize = 512;
 
     dataArray = new Uint8Array(analyser.frequencyBinCount);
 
@@ -57,7 +64,36 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /********************
-   * CHLADNI
+   * PLAYLIST AUTO / BOUCLE
+   ********************/
+  audioElement.addEventListener("ended", () => {
+
+    // 🔁 boucle du morceau
+    if (loopTrackCheckbox.checked) {
+      audioElement.currentTime = 0;
+      audioElement.play();
+      return;
+    }
+
+    // ▶️ morceau suivant
+    currentTrackIndex++;
+
+    // fin de playlist
+    if (currentTrackIndex >= audioFiles.length) {
+      if (loopPlaylistCheckbox.checked) {
+        currentTrackIndex = 0;
+      } else {
+        return;
+      }
+    }
+
+    audioSelect.selectedIndex = currentTrackIndex;
+    audioElement.src = audioFiles[currentTrackIndex];
+    audioElement.play();
+  });
+
+  /********************
+   * CHLADNI VISUEL
    ********************/
   function drawChladni({ m, n, threshold, size, color }) {
     const scale = 160;
@@ -82,45 +118,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  /********************
-   * ANIMATION
-   ********************/
-  function animate(t) {
-    requestAnimationFrame(animate);
-
-    ctx.setTransform(1, 0, 0, 1, canvas.width / 2, canvas.height / 2);
-    ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
-
-    let energy = 0, bass = 0, treble = 0;
-
-    if (analyser) {
-      analyser.getByteFrequencyData(dataArray);
-
-      const len = dataArray.length;
-      bass = dataArray.slice(0, len * 0.25).reduce((a,b)=>a+b,0)/(len*0.25);
-      treble = dataArray.slice(len * 0.6).reduce((a,b)=>a+b,0)/(len*0.4);
-      energy = dataArray.reduce((a,b)=>a+b,0)/len;
-    }
-
-    // 🎵 paramètres visuels
-    const m = 2 + Math.floor(bass / 40);
-    const n = 3 + Math.floor(treble / 40);
-
-    const threshold = 0.03 + energy / 600;
-    const size = 1.2 + energy / 300;
-
-    const hue = 35 + energy * 0.5;
-    const color = `hsl(${hue}, 45%, 75%)`;
-
-    const time = t * 0.001;
-    ctx.rotate(0.04 * Math.sin(time * 0.2));
-    ctx.scale(
-      1 + 0.05 * Math.sin(time * 0.3),
-      1 + 0.05 * Math.sin(time * 0.3)
-    );
-
-    drawChladni({ m, n, threshold, size, color });
-  }
-
-  requestAnimationFrame(animate);
-});
+  /****
