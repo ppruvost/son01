@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
   audioSelect.addEventListener("change", () => {
     currentTrackIndex = audioSelect.selectedIndex;
     audioElement.src = audioFiles[currentTrackIndex];
-    audioElement.play();
+    audioElement.play().catch(e => console.error("Erreur de lecture :", e));
   });
 
   /********************
@@ -54,11 +54,24 @@ document.addEventListener("DOMContentLoaded", () => {
     analyser.connect(audioCtx.destination);
   }
 
+  // Gestion de la lecture
   audioElement.addEventListener("play", () => {
     if (!audioCtx) setupAudio();
     if (audioCtx.state === "suspended") audioCtx.resume();
     drawLoop();
   });
+
+  // Bouton "Lecture" personnalisé (si nécessaire)
+  const playButton = document.querySelector("#audioFile + .controls button");
+  if (playButton) {
+    playButton.addEventListener("click", () => {
+      if (audioElement.paused) {
+        audioElement.play().catch(e => console.error("Erreur de lecture :", e));
+      } else {
+        audioElement.pause();
+      }
+    });
+  }
 
   /********************
    * PLAYLIST AUTO / BOUCLE
@@ -66,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
   audioElement.addEventListener("ended", () => {
     if (loopTrackCheckbox.checked) {
       audioElement.currentTime = 0;
-      audioElement.play();
+      audioElement.play().catch(e => console.error("Erreur de lecture :", e));
       return;
     }
     currentTrackIndex++;
@@ -79,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     audioSelect.selectedIndex = currentTrackIndex;
     audioElement.src = audioFiles[currentTrackIndex];
-    audioElement.play();
+    audioElement.play().catch(e => console.error("Erreur de lecture :", e));
   });
 
   /********************
@@ -107,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function drawLoop() {
     if (!audioCtx) return;
     analyser.getByteFrequencyData(dataArray);
-    // Ici, vous pouvez adapter les paramètres de drawChladni en fonction des données audio
     drawChladni({ m: 1, n: 1, threshold: 0.1, size: 2, color: "#e7dfd3" });
     requestAnimationFrame(drawLoop);
   }
