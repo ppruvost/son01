@@ -2,27 +2,49 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Figures de Chladni</title>
+  <title>Figures de Chladni – Soin vibratoire</title>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Visualisation cymatique inspirée des figures de Chladni pour relaxation et soin énergétique." />
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
-  <!-- BLOC : TITRE -->
+  <!-- BLOC 1 : TITRE -->
   <header>
     <h1>Figures de Chladni – vibration et forme</h1>
   </header>
 
-  <!-- BLOC : VISUALISATION -->
+  <!-- BLOC 2 : AUDIO SPA -->
+  <section id="audio" aria-label="Musique de relaxation">
+    <iframe
+      src="https://www.radio.fr/s/1fmdestinationspa"
+      width="100%"
+      height="80"
+      frameborder="0"
+      loading="lazy"
+      allow="autoplay"
+      title="Radio relaxation spa">
+    </iframe>
+  </section>
+
+  <!-- BLOC 3 : VISUALISATION -->
   <main>
-    <canvas id="canvas" width="460" height="460"></canvas>
+    <canvas
+      id="canvas"
+      width="460"
+      height="460"
+      aria-label="Visualisation des figures de Chladni">
+    </canvas>
   </main>
 
-  <!-- BLOC : CONTROLES -->
-  <section class="controls">
+  <!-- BLOC 4 : CONTROLES -->
+  <section class="controls" aria-label="Contrôles de la visualisation">
 
     <div class="control">
-      <label>Fréquence (Hz)</label>
+      <label for="freqSelect">Fréquence (Hz)</label>
       <select id="freqSelect">
         <option value="174">174 – Ancrage</option>
         <option value="285">285 – Régénération</option>
@@ -36,25 +58,37 @@
     </div>
 
     <div class="control">
-      <label>Mode m</label>
-      <input type="range" id="mSlider" min="1" max="10" value="3">
+      <label for="mSlider">Mode m</label>
+      <input
+        type="range"
+        id="mSlider"
+        min="1"
+        max="10"
+        value="3" />
       <span id="mVal">3</span>
     </div>
 
     <div class="control">
-      <label>Mode n</label>
-      <input type="range" id="nSlider" min="1" max="10" value="4">
+      <label for="nSlider">Mode n</label>
+      <input
+        type="range"
+        id="nSlider"
+        min="1"
+        max="10"
+        value="4" />
       <span id="nVal">4</span>
     </div>
 
-    <button id="playBtn">▶ Son</button>
+    <button id="playBtn" type="button">▶ Son</button>
   </section>
 
-  <!-- BLOC : PIED -->
+  <!-- BLOC 5 : PIED -->
   <footer>
-    Visualisation cymatique
+    Visualisation cymatique – soin humain
   </footer>
 
-  <script src="script.js"></script>
+  <!-- SCRIPT -->
+  <script src="script.js" defer></script>
+
 </body>
 </html>
