@@ -108,7 +108,7 @@ function animate(time = performance.now()) {
   ctx.translate(canvas.width / 2, canvas.height / 2);
 
   ctx.strokeStyle = "#e7dfd3";
-  ctx.globalAlpha = 0.85;
+  ctx.globalAlpha = 0.9;
 
   const freq = parseFloat(freqSelect.value);
   const t = time - startTime;
