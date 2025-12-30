@@ -42,35 +42,58 @@ nSlider.oninput = () => {
 };
 
 /********************
- * BLOC 6 – AUDIO ON/OFF
+ * BLOC 6 – AUDIO ON / OFF (STABLE)
  ********************/
-function toggleSound() {
-  if (!audioCtx) audioCtx = new AudioContext();
+let audioCtx = null;
+let oscillator = null;
+let gainNode = null;
+let isPlaying = false;
 
-  if (oscillator) {
+function toggleSound() {
+  // Création AudioContext si nécessaire
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  // Reprise audio (obligatoire navigateur)
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+
+  // STOP
+  if (isPlaying) {
     oscillator.stop();
+    oscillator.disconnect();
+    gainNode.disconnect();
+
     oscillator = null;
-    cancelAnimationFrame(animationId);
+    gainNode = null;
+    isPlaying = false;
+
     playBtn.textContent = "▶ Son";
     return;
   }
 
+  // PLAY
   oscillator = audioCtx.createOscillator();
+  gainNode = audioCtx.createGain();
+
   oscillator.type = "sine";
   oscillator.frequency.value = parseFloat(freqSelect.value);
 
-  const gain = audioCtx.createGain();
-  gain.gain.value = 0.03;
+  gainNode.gain.value = 0.03; // volume doux soin humain
 
-  oscillator.connect(gain).connect(audioCtx.destination);
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
   oscillator.start();
 
-  startTime = performance.now();
+  isPlaying = true;
   playBtn.textContent = "⏸ Stop";
-  animate();
 }
 
 playBtn.addEventListener("click", toggleSound);
+
 
 /********************
  * BLOC 7 – FIGURE DE CHLADNI (VERSION PHYSIQUE)
@@ -101,21 +124,18 @@ function drawChladni() {
   }
 }
 
-/********************
- * BLOC 8 – ANIMATION
- ********************/
-function animate(time = performance.now()) {
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.translate(canvas.width / 2, canvas.height / 2);
+function animate(t) {
+  ctx.setTransform(1, 0, 0, 1, canvas.width / 2, canvas.height / 2);
+  ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
 
-  ctx.fillStyle = "#e7dfd3";
-  ctx.globalAlpha = 0.9;
+  const time = t * 0.001;
 
-  const freq = parseFloat(freqSelect.value);
-  const t = time - startTime;
+  // respiration visuelle
+  const breath = 1 + 0.03 * Math.sin((2 * Math.PI / breathingCycle) * time);
+
+  ctx.scale(breath, breath);
 
   drawChladni();
 
-  animationId = requestAnimationFrame(animate);
+  requestAnimationFrame(animate);
 }
