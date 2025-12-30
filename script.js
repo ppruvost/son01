@@ -9,7 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   let audioCtx = null;
   let isPlaying = false;
 
-  // Remplir la liste déroulante
+  /* =========================
+     Remplir la liste déroulante
+     ========================= */
   audioFiles.forEach((file) => {
     const option = document.createElement("option");
     option.value = file;
@@ -17,24 +19,74 @@ document.addEventListener("DOMContentLoaded", () => {
     audioSelect.appendChild(option);
   });
 
-  // Activer le bouton après le chargement de la page
+  // Définir une source par défaut (IMPORTANT)
+  audioElement.src = audioFiles[0];
+
   customPlayButton.disabled = false;
 
-  // Gestion du bouton Lecture/Pause
+  /* =========================
+     Bouton Lecture / Pause
+     ========================= */
   customPlayButton.addEventListener("click", async () => {
-    if (isPlaying) {
-      audioElement.pause();
-      customPlayButton.textContent = "Lecture";
-    } else {
-      try {
+    try {
+      // Créer / réactiver AudioContext dans le clic utilisateur
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
+      if (isPlaying) {
+        audioElement.pause();
+        customPlayButton.textContent = "Lecture";
+        isPlaying = false;
+      } else {
+        // Sécurité : s'assurer que la source est définie
+        if (!audioElement.src) {
+          audioElement.src = audioSelect.value;
+        }
+
         await audioElement.play();
         customPlayButton.textContent = "Pause";
         isPlaying = true;
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
         drawLoop();
-      } catch (error) {
+      }
+    } catch (error) {
+      console.error("Lecture bloquée :", error);
+    }
+  });
+
+  /* =========================
+     Changement de morceau
+     ========================= */
+  audioSelect.addEventListener("change", () => {
+    audioElement.pause();
+    audioElement.src = audioSelect.value;
+    audioElement.load();
+
+    if (isPlaying) {
+      audioElement.play().catch(e => console.error("Erreur lecture :", e));
+    }
+  });
+
+  /* =========================
+     Visualisation Chladni (exemple)
+     ========================= */
+  function drawChladni() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#e7dfd3";
+
+    // Exemple simple (à remplacer par ton algorithme réel)
+    ctx.fillRect(100, 100, 200, 200);
+  }
+
+  function drawLoop() {
+    if (!isPlaying) return;
+    drawChladni();
+    requestAnimationFrame(drawLoop);
+  }
+});      } catch (error) {
         console.error("Erreur de lecture :", error);
         alert("La lecture a été bloquée. Veuillez interagir avec la page et réessayer.");
       }
