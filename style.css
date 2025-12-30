@@ -1,27 +1,47 @@
+/********************
+ * STYLE GLOBAL – SOIN HUMAIN
+ ********************/
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
-  background: #0f0f0f;
+  background: #0b0b0b; /* plus profond, moins gris */
   color: #e7dfd3;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+
+  min-height: 100vh;
+  padding: 1.2rem;
 }
 
+/********************
+ * EN-TÊTE
+ ********************/
 header h1 {
   font-weight: 300;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   font-size: 1.4rem;
+  margin-bottom: 0.6rem;
 }
 
+/********************
+ * CANVAS CYMATIQUE
+ ********************/
 canvas {
-  background: radial-gradient(circle, #1e1a18, #0f0f0f);
-  border-radius: 14px;
-  box-shadow: 0 0 35px rgba(128,102,91,0.4);
+  display: block;
+  background: #0f0f0f; /* fond UNI, essentiel */
+  border-radius: 16px;
+
+  /* Ombre contenue et nette */
+  box-shadow: 0 0 18px rgba(128, 102, 91, 0.25);
+
+  margin: 0.5rem 0;
 }
 
+/********************
+ * CONTROLES
+ ********************/
 .controls {
   margin-top: 1rem;
   display: flex;
@@ -36,25 +56,47 @@ canvas {
   flex-direction: column;
   font-size: 0.8rem;
   align-items: center;
+  gap: 0.2rem;
 }
 
+/********************
+ * INPUTS
+ ********************/
 select,
 input[type="range"],
 button {
   background: #80665b;
   border: none;
   color: #e7dfd3;
-  padding: 0.4rem 0.6rem;
+  padding: 0.45rem 0.7rem;
   border-radius: 6px;
+  font-size: 0.85rem;
 }
 
+select:focus,
+input[type="range"]:focus,
+button:focus {
+  outline: none;
+}
+
+/********************
+ * BOUTONS
+ ********************/
 button {
   cursor: pointer;
   font-size: 0.9rem;
+  transition: background 0.3s ease;
 }
 
+button:hover {
+  background: #8d7367;
+}
+
+/********************
+ * FOOTER
+ ********************/
 footer {
   margin-top: 0.8rem;
   font-size: 0.7rem;
-  opacity: 0.6;
+  opacity: 0.55;
 }
