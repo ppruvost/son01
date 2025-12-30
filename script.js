@@ -70,9 +70,10 @@ playBtn.addEventListener("click", toggleSound);
  * BLOC 3 – FIGURE DE CHLADNI
  ********************/
 function drawChladni() {
-  const scale = 150;
-  const step = 3;
-  const L = Math.PI;
+  const scale = 150;       // étendue du motif
+  const step = 2;           // densité des points
+  const L = Math.PI;        // normalisation
+  const threshold = 0.03;   // seuil pour points visibles
 
   ctx.fillStyle = "#e7dfd3";
 
@@ -84,8 +85,8 @@ function drawChladni() {
       const v = Math.cos(n * nx) * Math.cos(m * ny) -
                 Math.cos(m * nx) * Math.cos(n * ny);
 
-      if (Math.abs(v) < 0.008) {
-        ctx.fillRect(x, y, 1.3, 1.3);
+      if (Math.abs(v) < threshold) {
+        ctx.fillRect(x, y, 1.5, 1.5); // taille des points
       }
     }
   }
@@ -99,11 +100,12 @@ function animate(t) {
   ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
 
   const time = t * 0.001;
-  const breath = 1 + 0.03 * Math.sin((2 * Math.PI / 12) * time);
+  const breath = 1 + 0.03 * Math.sin((2 * Math.PI / 12) * time); // pulsation lente
   ctx.scale(breath, breath);
 
   drawChladni();
   requestAnimationFrame(animate);
 }
 
+// démarrage de l'animation
 requestAnimationFrame(animate);
