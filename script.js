@@ -38,7 +38,7 @@ function setupAudio() {
   const source = audioCtx.createMediaElementSource(audioElement);
 
   analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 512;
+  analyser.fftSize = 396;
 
   dataArray = new Uint8Array(analyser.frequencyBinCount);
 
