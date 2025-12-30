@@ -15,12 +15,9 @@
 
   <!-- BLOC : AUDIO / CONTROLES -->
   <section id="audio" class="controls">
-
     <div class="control">
       <label for="audioSelect">Choisir une musique</label>
-      <select id="audioSelect">
-        <!-- options injectées par script.js -->
-      </select>
+      <select id="audioSelect"></select>
     </div>
 
     <div class="control">
@@ -28,7 +25,6 @@
         <input type="checkbox" id="loopTrack">
         Boucle du morceau
       </label>
-
       <label>
         <input type="checkbox" id="loopPlaylist">
         Boucle de la playlist
@@ -38,7 +34,6 @@
     <div class="control">
       <audio id="audioFile" controls preload="auto"></audio>
     </div>
-
   </section>
 
   <!-- BLOC : VISUALISATION -->
@@ -58,6 +53,5 @@
 
   <!-- SCRIPT -->
   <script src="script.js" defer></script>
-
 </body>
 </html>
