@@ -13,9 +13,9 @@ let audioCtx, analyser, dataArray;
  * PLAYLIST (à adapter)
  ********************/
 const audioFiles = [
-  "song/396 HZ Solfeggio Liberating Guilt and Fear C.mp3",
-  "song/432 HZ Deep Healing.mp3",
-  "song/528 HZ Transformation.mp3"
+  "song/396 HZ.mp3",
+  "song/485 HZ.mp3"
+  
 ];
 
 audioFiles.forEach(file => {
