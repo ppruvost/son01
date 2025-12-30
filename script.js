@@ -60,7 +60,7 @@ function toggleSound() {
   oscillator.frequency.value = parseFloat(freqSelect.value);
 
   const gain = audioCtx.createGain();
-  gain.gain.value = 0.04;
+  gain.gain.value = 0.03;
 
   oscillator.connect(gain).connect(audioCtx.destination);
   oscillator.start();
@@ -77,11 +77,12 @@ playBtn.addEventListener("click", toggleSound);
  ********************/
 function drawChladni(t) {
   const scale = 160;
-  const step = 2;
-  ctx.beginPath();
+  const step = 3; // moins dense = plus lisible
+  const threshold = 0.015; // lignes fines et nettes
 
   for (let x = -scale; x <= scale; x += step) {
     for (let y = -scale; y <= scale; y += step) {
+
       const X = ((x + scale) / (2 * scale)) * Math.PI;
       const Y = ((y + scale) / (2 * scale)) * Math.PI;
 
@@ -89,14 +90,13 @@ function drawChladni(t) {
         Math.sin(n * X) * Math.sin(m * Y) -
         Math.sin(m * X) * Math.sin(n * Y);
 
-      const threshold = 0.04 + 0.02 * Math.sin(t * 0.0004);
-
       if (Math.abs(value) < threshold) {
-        ctx.lineTo(x, y);
+        ctx.beginPath();
+        ctx.arc(x, y, 0.8, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
   }
-  ctx.stroke();
 }
 
 /********************
@@ -107,7 +107,7 @@ function animate(time = performance.now()) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.translate(canvas.width / 2, canvas.height / 2);
 
-  ctx.strokeStyle = "#e7dfd3";
+  ctx.fillStyle = "#e7dfd3";
   ctx.globalAlpha = 0.9;
 
   const freq = parseFloat(freqSelect.value);
