@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
    ********************/
   const audioFiles = [
     "song/396 HZ.mp3",
-    "song/485 HZ.mp3"
+    "song/432 HZ.mp3"
   ];
 
   audioSelect.innerHTML = "";
