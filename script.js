@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
    * PLAYLIST LOCALE
    ********************/
   const audioFiles = [
-    "song/396 HZ.mp3",
-    "song/432 HZ.mp3"
-  ];
+  "song/396 Hz.mp3",
+  "song/432 Hz.mp3"
+];
 
   audioSelect.innerHTML = "";
 
