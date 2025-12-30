@@ -1,87 +1,37 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <title>Figures de Chladni – Soin vibratoire</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Visualisation cymatique interactive inspirée des figures de Chladni pour relaxation et soin énergétique." />
-
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Chladni interactif – Playlist locale</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-  <!-- BLOC 1 : TITRE -->
   <header>
-    <h1>Figures de Chladni – vibration et forme</h1>
+    <h1>Figures de Chladni – Playlist interactive</h1>
   </header>
 
-  <!-- BLOC 2 : AUDIO LOCAL -->
-  <section id="audio" aria-label="Musique de relaxation">
-    <audio id="audioFile" src="396 HZ Solfeggio Liberating Guilt and Fear C.mp3" controls></audio>
-    <button id="playRadio" type="button">▶ Écouter la radio SPA</button>
+  <section id="audio">
+    <label for="audioSelect">Choisir une musique :</label>
+    <select id="audioSelect"></select>
+
+    <label>
+      <input type="checkbox" id="loopCheckbox">
+      Lecture en boucle
+    </label>
+
+    <audio id="audioFile" controls></audio>
   </section>
 
-  <!-- BLOC 3 : VISUALISATION -->
   <main>
-    <canvas
-      id="canvas"
-      width="460"
-      height="460"
-      aria-label="Visualisation des figures de Chladni">
-    </canvas>
+    <canvas id="canvas" width="460" height="460" aria-label="Visualisation Chladni"></canvas>
   </main>
 
-  <!-- BLOC 4 : CONTROLES -->
-  <section class="controls" aria-label="Contrôles de la visualisation">
-
-    <div class="control">
-      <label for="freqSelect">Fréquence (Hz)</label>
-      <select id="freqSelect">
-        <option value="174">174 – Ancrage</option>
-        <option value="285">285 – Régénération</option>
-        <option value="396">396 – Libération</option>
-        <option value="432">432 – Harmonie</option>
-        <option value="528">528 – Transformation</option>
-        <option value="639">639 – Cœur</option>
-        <option value="741">741 – Clarté</option>
-        <option value="852">852 – Intuition</option>
-      </select>
-    </div>
-
-    <div class="control">
-      <label for="mSlider">Mode m</label>
-      <input type="range" id="mSlider" min="1" max="10" value="3" />
-      <span id="mVal">3</span>
-    </div>
-
-    <div class="control">
-      <label for="nSlider">Mode n</label>
-      <input type="range" id="nSlider" min="1" max="10" value="4" />
-      <span id="nVal">4</span>
-    </div>
-
-    <button id="playBtn" type="button">▶ Son</button>
-  </section>
-
-  <!-- BLOC 5 : PIED -->
   <footer>
-    Visualisation cymatique – soin humain
+    Visualisation cymatique interactive – soin humain
   </footer>
 
   <script src="script.js" defer></script>
-
-  <script>
-    // Ouvre la radio SPA dans un nouvel onglet
-    document.getElementById("playRadio").addEventListener("click", () => {
-      window.open(
-        "https://www.radio.fr/s/1fmdestinationspa",
-        "_blank",
-        "noopener,noreferrer"
-      );
-    });
-  </script>
-
 </body>
 </html>
