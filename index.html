@@ -8,30 +8,56 @@
 </head>
 <body>
 
+  <!-- BLOC : TITRE -->
   <header>
     <h1>Figures de Chladni – Playlist interactive</h1>
   </header>
 
-  <section id="audio">
-    <label for="audioSelect">Choisir une musique :</label>
-    <select id="audioSelect"></select>
+  <!-- BLOC : AUDIO / CONTROLES -->
+  <section id="audio" class="controls">
 
-    <label>
-      <input type="checkbox" id="loopCheckbox">
-      Lecture en boucle
-    </label>
+    <div class="control">
+      <label for="audioSelect">Choisir une musique</label>
+      <select id="audioSelect">
+        <!-- options injectées par script.js -->
+      </select>
+    </div>
 
-    <audio id="audioFile" controls></audio>
+    <div class="control">
+      <label>
+        <input type="checkbox" id="loopTrack">
+        Boucle du morceau
+      </label>
+
+      <label>
+        <input type="checkbox" id="loopPlaylist">
+        Boucle de la playlist
+      </label>
+    </div>
+
+    <div class="control">
+      <audio id="audioFile" controls preload="auto"></audio>
+    </div>
+
   </section>
 
+  <!-- BLOC : VISUALISATION -->
   <main>
-    <canvas id="canvas" width="460" height="460" aria-label="Visualisation Chladni"></canvas>
+    <canvas
+      id="canvas"
+      width="460"
+      height="460"
+      aria-label="Visualisation cymatique des figures de Chladni">
+    </canvas>
   </main>
 
+  <!-- BLOC : PIED -->
   <footer>
     Visualisation cymatique interactive – soin humain
   </footer>
 
+  <!-- SCRIPT -->
   <script src="script.js" defer></script>
+
 </body>
 </html>
