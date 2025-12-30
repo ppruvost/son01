@@ -75,25 +75,25 @@ playBtn.addEventListener("click", toggleSound);
 /********************
  * BLOC 7 – FIGURE DE CHLADNI
  ********************/
-function drawChladni(t) {
-  const scale = 160;
-  const step = 3; // moins dense = plus lisible
-  const threshold = 0.015; // lignes fines et nettes
+function drawChladni() {
+  const scale = 150;
+  const step = 6;           // TRÈS IMPORTANT
+  const threshold = 0.01;   // TRÈS IMPORTANT
+
+  ctx.fillStyle = "#e7dfd3";
 
   for (let x = -scale; x <= scale; x += step) {
     for (let y = -scale; y <= scale; y += step) {
 
-      const X = ((x + scale) / (2 * scale)) * Math.PI;
-      const Y = ((y + scale) / (2 * scale)) * Math.PI;
+      const X = (x / scale) * Math.PI;
+      const Y = (y / scale) * Math.PI;
 
       const value =
         Math.sin(n * X) * Math.sin(m * Y) -
         Math.sin(m * X) * Math.sin(n * Y);
 
       if (Math.abs(value) < threshold) {
-        ctx.beginPath();
-        ctx.arc(x, y, 0.8, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillRect(x, y, 1.2, 1.2);
       }
     }
   }
@@ -113,9 +113,7 @@ function animate(time = performance.now()) {
   const freq = parseFloat(freqSelect.value);
   const t = time - startTime;
 
-  ctx.rotate(Math.sin(t * 0.0001 * freq) * 0.03);
-
-  drawChladni(t);
+  drawChladni();
 
   animationId = requestAnimationFrame(animate);
 }
