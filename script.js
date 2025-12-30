@@ -15,8 +15,8 @@ let audioCtx, analyser, dataArray;
  * Déposer vos fichiers à la racine du projet
  ********************/
 const audioFiles = [
-  "396 HZ Solfeggio Liberating Guilt and Fear C.mp3",
-  "528 HZ Solfeggio Transformation.mp3"
+  "song/396 HZ.mp3",
+  "song/485 HZ.mp3"
 ];
 
 // Remplissage du select
