@@ -9,9 +9,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const audioElement = document.getElementById("audioFile");
   const loopTrackCheckbox = document.getElementById("loopTrack");
   const loopPlaylistCheckbox = document.getElementById("loopPlaylist");
+  const customPlayButton = document.getElementById("customPlayButton");
 
   let audioCtx, analyser, dataArray;
   let currentTrackIndex = 0;
+  let isPlaying = false;
 
   /********************
    * PLAYLIST LOCALE
@@ -34,11 +36,35 @@ document.addEventListener("DOMContentLoaded", () => {
     audioElement.src = audioFiles[0];
   }
 
+  /********************
+   * GESTION DE LA LECTURE
+   ********************/
+  customPlayButton.addEventListener("click", () => {
+    if (audioElement.paused) {
+      audioElement.play()
+        .then(() => {
+          customPlayButton.textContent = "Pause";
+          isPlaying = true;
+        })
+        .catch(e => {
+          console.error("Erreur de lecture :", e);
+          alert("La lecture a été bloquée par le navigateur. Veuillez interagir avec la page et réessayer.");
+        });
+    } else {
+      audioElement.pause();
+      customPlayButton.textContent = "Lecture";
+      isPlaying = false;
+    }
+  });
+
   // Changement de morceau
   audioSelect.addEventListener("change", () => {
     currentTrackIndex = audioSelect.selectedIndex;
     audioElement.src = audioFiles[currentTrackIndex];
-    audioElement.play().catch(e => console.error("Erreur de lecture :", e));
+    if (isPlaying) {
+      audioElement.play()
+        .catch(e => console.error("Erreur de lecture :", e));
+    }
   });
 
   /********************
@@ -54,24 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
     analyser.connect(audioCtx.destination);
   }
 
-  // Gestion de la lecture
   audioElement.addEventListener("play", () => {
     if (!audioCtx) setupAudio();
     if (audioCtx.state === "suspended") audioCtx.resume();
     drawLoop();
   });
-
-  // Bouton "Lecture" personnalisé (si nécessaire)
-  const playButton = document.querySelector("#audioFile + .controls button");
-  if (playButton) {
-    playButton.addEventListener("click", () => {
-      if (audioElement.paused) {
-        audioElement.play().catch(e => console.error("Erreur de lecture :", e));
-      } else {
-        audioElement.pause();
-      }
-    });
-  }
 
   /********************
    * PLAYLIST AUTO / BOUCLE
@@ -79,7 +92,8 @@ document.addEventListener("DOMContentLoaded", () => {
   audioElement.addEventListener("ended", () => {
     if (loopTrackCheckbox.checked) {
       audioElement.currentTime = 0;
-      audioElement.play().catch(e => console.error("Erreur de lecture :", e));
+      audioElement.play()
+        .catch(e => console.error("Erreur de lecture :", e));
       return;
     }
     currentTrackIndex++;
@@ -87,12 +101,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (loopPlaylistCheckbox.checked) {
         currentTrackIndex = 0;
       } else {
+        customPlayButton.textContent = "Lecture";
+        isPlaying = false;
         return;
       }
     }
     audioSelect.selectedIndex = currentTrackIndex;
     audioElement.src = audioFiles[currentTrackIndex];
-    audioElement.play().catch(e => console.error("Erreur de lecture :", e));
+    audioElement.play()
+      .catch(e => console.error("Erreur de lecture :", e));
   });
 
   /********************
@@ -118,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function drawLoop() {
-    if (!audioCtx) return;
+    if (!audioCtx || audioElement.paused) return;
     analyser.getByteFrequencyData(dataArray);
     drawChladni({ m: 1, n: 1, threshold: 0.1, size: 2, color: "#e7dfd3" });
     requestAnimationFrame(drawLoop);
