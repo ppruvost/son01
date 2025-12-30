@@ -4,7 +4,7 @@
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
-  background: #0b0b0b; /* plus profond, moins gris */
+  background: #0b0b0b;
   color: #e7dfd3;
 
   display: flex;
@@ -30,12 +30,9 @@ header h1 {
  ********************/
 canvas {
   display: block;
-  background: #0f0f0f; /* fond UNI, essentiel */
+  background: #0f0f0f;
   border-radius: 16px;
-
-  /* Ombre contenue et nette */
   box-shadow: 0 0 18px rgba(128, 102, 91, 0.25);
-
   margin: 0.5rem 0;
 }
 
