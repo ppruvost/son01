@@ -73,27 +73,29 @@ function toggleSound() {
 playBtn.addEventListener("click", toggleSound);
 
 /********************
- * BLOC 7 – FIGURE DE CHLADNI
+ * BLOC 7 – FIGURE DE CHLADNI (VERSION PHYSIQUE)
  ********************/
 function drawChladni() {
   const scale = 150;
-  const step = 6;           // TRÈS IMPORTANT
-  const threshold = 0.01;   // TRÈS IMPORTANT
+  const step = 3;  // densité des échantillons
+  const L = Math.PI;
 
   ctx.fillStyle = "#e7dfd3";
 
   for (let x = -scale; x <= scale; x += step) {
     for (let y = -scale; y <= scale; y += step) {
+      // On normalise sur [-π..π]
+      const nx = (x / scale) * L;
+      const ny = (y / scale) * L;
 
-      const X = (x / scale) * Math.PI;
-      const Y = (y / scale) * Math.PI;
+      // formule correcte des lignes nodales
+      const v =
+        Math.cos(n * nx) * Math.cos(m * ny) -
+        Math.cos(m * nx) * Math.cos(n * ny);
 
-      const value =
-        Math.sin(n * X) * Math.sin(m * Y) -
-        Math.sin(m * X) * Math.sin(n * Y);
-
-      if (Math.abs(value) < threshold) {
-        ctx.fillRect(x, y, 1.2, 1.2);
+      // seuil très fin pour nœud
+      if (Math.abs(v) < 0.008) {
+        ctx.fillRect(x, y, 1.3, 1.3);
       }
     }
   }
