@@ -1,80 +1,48 @@
 /********************
- * BLOC 0 – VARIABLES GLOBALES
+ * Variables
  ********************/
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const freqSelect = document.getElementById("freqSelect");
-const mSlider = document.getElementById("mSlider");
-const nSlider = document.getElementById("nSlider");
-const mVal = document.getElementById("mVal");
-const nVal = document.getElementById("nVal");
-const playBtn = document.getElementById("playBtn");
-
+const audioSelect = document.getElementById("audioSelect");
 const audioElement = document.getElementById("audioFile");
+const loopCheckbox = document.getElementById("loopCheckbox");
 
-let audioCtx = null;
-let oscillator = null;
-let gainNode = null;
-let isPlaying = false;
-
-let m = parseInt(mSlider.value);
-let n = parseInt(nSlider.value);
+let audioCtx, analyser, dataArray;
 
 /********************
- * BLOC 1 – SLIDERS
+ * Liste des fichiers audio
+ * Déposer vos fichiers à la racine du projet
  ********************/
-mSlider.addEventListener("input", () => {
-  m = parseInt(mSlider.value);
-  mVal.textContent = m;
+const audioFiles = [
+  "396 HZ Solfeggio Liberating Guilt and Fear C.mp3",
+  "528 HZ Solfeggio Transformation.mp3"
+];
+
+// Remplissage du select
+audioFiles.forEach(file => {
+  const option = document.createElement("option");
+  option.value = file;
+  option.textContent = file;
+  audioSelect.appendChild(option);
 });
 
-nSlider.addEventListener("input", () => {
-  n = parseInt(nSlider.value);
-  nVal.textContent = n;
+// Charger la musique sélectionnée
+audioSelect.addEventListener("change", () => {
+  audioElement.src = audioSelect.value;
+  audioElement.play();
+});
+
+// Loop toggle
+loopCheckbox.addEventListener("change", () => {
+  audioElement.loop = loopCheckbox.checked;
 });
 
 /********************
- * BLOC 2 – AUDIO ON/OFF OSCILLATEUR
+ * Setup AudioContext
  ********************/
-function toggleSound() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (audioCtx.state === "suspended") audioCtx.resume();
-
-  if (isPlaying) {
-    oscillator.stop();
-    oscillator.disconnect();
-    gainNode.disconnect();
-    oscillator = null;
-    gainNode = null;
-    isPlaying = false;
-    playBtn.textContent = "▶ Son";
-    return;
-  }
-
-  oscillator = audioCtx.createOscillator();
-  gainNode = audioCtx.createGain();
-
-  oscillator.type = "sine";
-  oscillator.frequency.value = parseFloat(freqSelect.value);
-  gainNode.gain.value = 0.03;
-
-  oscillator.connect(gainNode).connect(audioCtx.destination);
-  oscillator.start();
-
-  isPlaying = true;
-  playBtn.textContent = "⏸ Stop";
-}
-
-playBtn.addEventListener("click", toggleSound);
-
-/********************
- * BLOC 3 – AUDIO LOCAL INTERACTIF
- ********************/
-let analyser, dataArray;
-
-function setupAudioAnalysis() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function setupAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const source = audioCtx.createMediaElementSource(audioElement);
   analyser = audioCtx.createAnalyser();
   analyser.fftSize = 256;
@@ -85,12 +53,12 @@ function setupAudioAnalysis() {
 }
 
 audioElement.addEventListener("play", () => {
-  if (!analyser) setupAudioAnalysis();
+  if (!audioCtx) setupAudio();
   if (audioCtx.state === "suspended") audioCtx.resume();
 });
 
 /********************
- * BLOC 4 – FIGURE DE CHLADNI
+ * Draw Chladni adaptatif
  ********************/
 function drawChladni(threshold = 0.03) {
   const scale = 150;
@@ -98,6 +66,10 @@ function drawChladni(threshold = 0.03) {
   const L = Math.PI;
 
   ctx.fillStyle = "#e7dfd3";
+
+  const avgFreq = dataArray ? dataArray.reduce((a,b)=>a+b,0)/dataArray.length : 0;
+  const m = 2 + Math.floor(avgFreq / 32);
+  const n = 2 + Math.floor(avgFreq / 32);
 
   for (let x = -scale; x <= scale; x += step) {
     for (let y = -scale; y <= scale; y += step) {
@@ -115,25 +87,25 @@ function drawChladni(threshold = 0.03) {
 }
 
 /********************
- * BLOC 5 – ANIMATION LENTE
+ * Animation
  ********************/
 function animate(t) {
   ctx.setTransform(1, 0, 0, 1, canvas.width / 2, canvas.height / 2);
   ctx.clearRect(-canvas.width, -canvas.height, canvas.width * 2, canvas.height * 2);
 
-  let threshold = 0.03;
-
+  let threshold = 0.02;
   if (analyser && dataArray) {
     analyser.getByteFrequencyData(dataArray);
-    const avg = dataArray.reduce((a,b) => a+b,0) / dataArray.length;
-    threshold = 0.02 + avg / 512; // seuil dynamique selon amplitude
+    const avg = dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
+    threshold = 0.02 + avg / 512;
   }
 
-  const time = t * 0.001;
-  const breath = 1 + 0.03 * Math.sin((2 * Math.PI / 12) * time);
+  const time = t*0.001;
+  const breath = 1 + 0.03*Math.sin((2*Math.PI/12)*time);
   ctx.scale(breath, breath);
 
   drawChladni(threshold);
+
   requestAnimationFrame(animate);
 }
 
